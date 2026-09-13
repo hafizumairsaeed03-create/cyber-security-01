@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 3: System Vulnerability Assessment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #050b14; color: #fff; min-height: 100vh; }
+
+        navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: #081221; border-bottom: 2px solid #0ef; }
+        .logo { font-size: 1.5em; font-weight: 700; color: #0ef; text-decoration: none; font-family: 'Fira Code', monospace; }
+
+        .container { padding: 40px 50px; max-width: 900px; margin: 0 auto; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #0ef; text-decoration: none; font-size: 0.95em; }
+        .back-link:hover { text-decoration: underline; }
+
+        .content-box { background: #081221; border: 1px solid #1c3352; border-radius: 12px; padding: 35px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 238, 255, 0.1); }
+        .content-box h1 { color: #0ef; font-size: 2em; margin-bottom: 10px; border-bottom: 2px solid #1c3352; padding-bottom: 10px; }
+        .subtitle { color: #a0aec0; margin-bottom: 30px; font-size: 0.95em; }
+
+        /* Step Section Styling */
+        .step-item { background: #0c1a2d; border-left: 4px solid #0ef; border-radius: 0 8px 8px 0; padding: 20px; margin-bottom: 20px; }
+        .step-title { color: #0ef; font-size: 1.2em; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .step-desc { color: #cbd5e1; font-size: 0.92em; line-height: 1.8; }
+        .step-desc ul { margin-left: 20px; margin-top: 8px; }
+        .step-desc li { margin-bottom: 5px; }
+
+        .highlight { color: #0ef; font-weight: 600; }
+        .code-box { background: #000; border-left: 4px solid #0ef; padding: 15px; border-radius: 5px; font-family: 'Fira Code', monospace; margin: 12px 0; color: #00ff66; font-size: 0.88em; line-height: 1.6; }
+
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; }
+        .nav-btn { padding: 10px 20px; background: #0ef; color: #050b14; text-decoration: none; font-weight: 600; border-radius: 20px; font-size: 0.9em; transition: 0.3s; }
+        .nav-btn:hover { box-shadow: 0 0 15px #0ef; }
+    </style>
+</head>
+<body>
+
+    <navbar>
+        <a href="home.html" class="logo">&gt;_ CYBER_HUB</a>
+    </navbar>
+
+    <div class="container">
+        <a href="ethical-hacking.html" class="back-link">⬅ Back to Course Modules</a>
+
+        <div class="content-box">
+            <h1>Module 3: System Vulnerability Assessment & Patching</h1>
+            <p class="subtitle">System Vulnerability Assessment ka matlab hota hai kisi Operating System (Windows, Linux) ya Server mein security loopholes aur kamzoriyan dhoondna taake unhein secure kiya ja sake.</p>
+
+            <!-- Step 1 -->
+            <div class="step-item">
+                <div class="step-title">⚠️ Step 1: Vulnerability (Khami/Bug) Kya Hoti Hai?</div>
+                <div class="step-desc">
+                    Software code ya system configuration mein mojood aisi <span class="highlight">Galti ya Kamzori</span> jiska faida utha kar hacker system par unauthorized access hasil kar le, usay **Vulnerability** kehte hain.
+                    <br><br>
+                    Jab tak yeh bug pata nahi chalta usay *Zero-Day Vulnerability* kehte hain, aur jab hacker is galti ka faida uthate hue attack karta hai usay *Exploit* kehte hain.
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-item">
+                <div class="step-title">🔍 Step 2: Vulnerability Assessment Kya Hoti Hai?</div>
+                <div class="step-desc">
+                    Yeh ek systematically process hai jisme system ke tamam kamzor pehluon ko analyze kiya jata hai. Iske 4 main steps hotay hain:
+                    <ul>
+                        <li><span class="highlight">1. Identification:</span> System mein kamzoriyan aur bugs trace karna.</li>
+                        <li><span class="highlight">2. Analysis:</span> Khami ki wajah aur severity (Low, Medium, Critical) ko samajhna.</li>
+                        <li><span class="highlight">3. Evaluation:</span> Dekhna ke is bug se system ko kitna nuksan ho sakta hai.</li>
+                        <li><span class="highlight">4. Remediation:</span> Bug ko fix (patch) karke system ko dobara secure karna.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-item">
+                <div class="step-title">🛠️ Step 3: Vulnerability Scanning Tools</div>
+                <div class="step-desc">
+                    Manual testing ke ilawa Ethical Hackers automated scanners ka istemal karte hain jo pure system ko scan karke bugs ki report tayyar karte hain:
+                    <ul>
+                        <li><span class="highlight">Nessus:</span> Dunya ka sab se ziada istemal hone wala vulnerability scanner.</li>
+                        <li><span class="highlight">OpenVAS:</span> Ek Powerful open-source vulnerability assessment tool.</li>
+                        <li><span class="highlight">Nikto:</span> Web server ki outdated scripts aur kamzoriyon ko scan karne ke liye.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-item">
+                <div class="step-title">🧪 Step 4: Metasploit Framework (Exploitation Test)</div>
+                <div class="step-desc">
+                    Bug dhoondne ke baad test kiya jata hai ke kya waqai is bug se system hack ho sakta hai ya nahi. Is ke liye <span class="highlight">Metasploit</span> istemal hota hai:
+
+                    <div class="code-box">
+                        # Metasploit Console Start Karna<br>
+                        msfconsole<br><br>
+
+                        # Vulnerability Ke Liya Exploit Search Karna<br>
+                        search ms17_010<br><br>
+
+                        # Target IP Set Karke Test Run Karna<br>
+                        use exploit/windows/smb/ms17_010_eternalblue<br>
+                        set RHOSTS 192.168.1.5<br>
+                        exploit
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-item">
+                <div class="step-title">🛡️ Step 5: System Security Patching & Hardening</div>
+                <div class="step-desc">
+                    Vulnerabilities milne ke baad Ethical Hacker ka kaam unhein band karna hota hai:
+                    <ul>
+                        <li><span class="highlight">Software Updates:</span> Operating system aur apps ko hamesha latest security patch par update rakhein.</li>
+                        <li><span class="highlight">Unused Ports/Services Disable:</span> Jin ports aur services ki zaroorat na ho unhein close kar dein.</li>
+                        <li><span class="highlight">Strong Authentication:</span> Multi-Factor Authentication (MFA) aur strong passwords ka nifaz.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <a href="module2.html" class="nav-btn">⬅ Previous (Module 2)</a>
+                <a href="module4.html" class="nav-btn">Next (Module 4) ➔</a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

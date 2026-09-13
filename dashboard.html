@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Hub | Security Analytics Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fira Code', monospace; }
+        body { background: #02050a; color: #0ef; min-height: 100vh; padding-bottom: 50px; position: relative; overflow-x: hidden; }
+
+        /* BACKGROUND MATRIX CANVAS */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+
+        /* Navigation Header */
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 40px; 
+            background: rgba(8, 18, 33, 0.9); 
+            border-bottom: 2px solid #0ef; 
+            box-shadow: 0 0 15px rgba(0, 238, 255, 0.3); 
+            backdrop-filter: blur(5px);
+        }
+        .logo { font-size: 1.4em; font-weight: 700; color: #0ef; text-shadow: 0 0 10px #0ef; text-decoration: none; }
+        .nav-links { display: flex; list-style: none; gap: 20px; }
+        .nav-links a { color: #fff; text-decoration: none; font-size: 0.9em; transition: 0.3s; font-family: 'Poppins', sans-serif; }
+        .nav-links a:hover, .nav-links a.active { color: #0ef; text-shadow: 0 0 8px #0ef; }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            padding: 20px 20px 10px;
+        }
+        .page-header h1 {
+            font-size: 2.2em;
+            color: #fff;
+            text-shadow: 0 0 10px #0ef, 0 0 20px #0ef;
+            margin-bottom: 5px;
+        }
+        .page-header p {
+            color: #00ff66;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+        }
+
+        /* GLOWING LIGHT CIRCLE / RADAR CORE */
+        .cyber-circle-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0 30px;
+        }
+        .neon-circle-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .glowing-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid #0ef;
+            box-shadow: 0 0 25px #0ef, inset 0 0 25px #0ef;
+            animation: pulseCircle 2s infinite ease-in-out;
+        }
+        .glowing-circle-outer {
+            position: absolute;
+            width: 185px;
+            height: 185px;
+            border-radius: 50%;
+            border: 2px dashed rgba(0, 238, 255, 0.6);
+            animation: rotateRadar 8s infinite linear;
+        }
+        .circle-core-text {
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #00ff66;
+            text-shadow: 0 0 10px #00ff66;
+            text-align: center;
+            z-index: 2;
+        }
+
+        @keyframes pulseCircle {
+            0% { transform: scale(0.95); box-shadow: 0 0 15px #0ef, inset 0 0 15px #0ef; }
+            50% { transform: scale(1.05); box-shadow: 0 0 35px #0ef, inset 0 0 35px #0ef; border-color: #00ff66; }
+            100% { transform: scale(0.95); box-shadow: 0 0 15px #0ef, inset 0 0 15px #0ef; }
+        }
+        @keyframes rotateRadar {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Layout Grid */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 0 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Cards & Panels */
+        .panel-box {
+            background: rgba(8, 18, 33, 0.85);
+            border: 1px solid #1c3352;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+        }
+        .panel-title {
+            font-size: 1em;
+            color: #0ef;
+            border-bottom: 1px solid #1c3352;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Metrics Display */
+        .metric-val {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px #0ef;
+            margin: 10px 0;
+        }
+        .metric-sub {
+            font-size: 0.8em;
+            color: #00ff66;
+        }
+
+        /* Status Bars */
+        .status-bar-bg {
+            background: #01050a;
+            border: 1px solid #1c3352;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .status-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ef, #00ff66);
+            width: 78%;
+            box-shadow: 0 0 10px #0ef;
+        }
+
+        /* Live Alert Feed */
+        .alert-feed {
+            background: #000;
+            border: 1px solid #1c3352;
+            border-radius: 5px;
+            padding: 10px;
+            height: 180px;
+            font-size: 0.75em;
+            overflow-y: auto;
+        }
+        .alert-item { margin-bottom: 8px; border-bottom: 1px solid #112233; padding-bottom: 4px; }
+        .alert-item.crit { color: #ff0055; }
+        .alert-item.warn { color: #ffbd2e; }
+        .alert-item.info { color: #00ff66; }
+
+        /* FLOATING FEMALE VOICE ASSISTANT BUTTON */
+        .voice-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(8, 18, 33, 0.95);
+            border: 2px solid #0ef;
+            color: #0ef;
+            padding: 12px 22px;
+            border-radius: 30px;
+            font-size: 0.85em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 238, 255, 0.5);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .voice-btn:hover {
+            background: #0ef;
+            color: #02050a;
+            box-shadow: 0 0 30px #0ef;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1000px) {
+            .dashboard-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 650px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MATRIX CANVAS BACKGROUND -->
+    <canvas id="matrix-bg"></canvas>
+
+    <!-- NAVIGATION HEADER -->
+    <header>
+        <a href="index.html?from=dashboard" class="logo" onclick="safeNavigate()">&gt;_ CYBER_HUB <span style="font-size: 11px; color: #00ff66;">[ By Zubair Khan ]</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html?from=dashboard" onclick="safeNavigate()">Home 🏠</a></li>
+            <li><a href="dashboard.html" class="active">Dashboard 📊</a></li>
+            <li><a href="profile.html">Profile 👤</a></li>
+        </ul>
+    </header>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <h1>SECURITY ANALYTICS DASHBOARD</h1>
+        <p>[ REAL-TIME SYSTEM MONITORING & THREAT INTELLIGENCE ]</p>
+    </div>
+
+    <!-- RADAR / CORE PULSE -->
+    <div class="cyber-circle-section">
+        <div class="neon-circle-container" onclick="triggerScanSound()">
+            <div class="glowing-circle-outer"></div>
+            <div class="glowing-circle"></div>
+            <div class="circle-core-text">
+                MAINFRAME<br>
+                <span style="color: #0ef; font-size: 0.9em;">ONLINE</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PANELS GRID -->
+    <div class="dashboard-container">
+        
+        <!-- Panel 1: System Load & Integrity -->
+        <div class="panel-box">
+            <div class="panel-title">
+                <span>SYSTEM HEALTH</span>
+                <span style="color: #00ff66;">● OPTIMAL</span>
+            </div>
+            <div class="metric-val">98.4%</div>
+            <div class="metric-sub">CPU core usage normal</div>
+            <div class="status-bar-bg">
+                <div class="status-bar-fill" style="width: 82%;"></div>
+            </div>
+        </div>
+
+        <!-- Panel 2: Threat Detection -->
+        <div class="panel-box">
+            <div class="panel-title">
+                <span>ACTIVE THREATS</span>
+                <span style="color: #ff0055;">● 2 BLOCKED</span>
+            </div>
+            <div class="metric-val" style="color: #ff0055; text-shadow: 0 0 10px #ff0055;">00</div>
+            <div class="metric-sub" style="color: #a0aec0;">Zero active breaches detected</div>
+            <div class="status-bar-bg">
+                <div class="status-bar-fill" style="width: 100%; background: #00ff66; box-shadow: 0 0 10px #00ff66;"></div>
+            </div>
+        </div>
+
+        <!-- Panel 3: Network Traffic -->
+        <div class="panel-box">
+            <div class="panel-title">
+                <span>NETWORK BANDWIDTH</span>
+                <span style="color: #0ef;">1.2 GB/s</span>
+            </div>
+            <div class="metric-val">245.8 MB/s</div>
+            <div class="metric-sub">Encrypted inbound traffic</div>
+            <div class="status-bar-bg">
+                <div class="status-bar-fill" style="width: 45%;"></div>
+            </div>
+        </div>
+
+        <!-- Panel 4: Live Threat Feed -->
+        <div class="panel-box" style="grid-column: span 2;">
+            <div class="panel-title">
+                <span>LIVE THREAT LOGS</span>
+                <span style="color: #ffbd2e; font-size: 0.8em;">AUTO-SYNCING...</span>
+            </div>
+            <div class="alert-feed" id="alert-feed-box">
+                <div class="alert-item info">[15:04:12] SYSTEM: Firewall protocol initialized successfully.</div>
+                <div class="alert-item warn">[15:04:22] WARN: Port scan detected from IP 185.220.101.5 - MITIGATED.</div>
+                <div class="alert-item crit">[15:04:35] ALERT: Unauthorized SQL Injection attempt stopped at endpoint /api/auth.</div>
+                <div class="alert-item info">[15:04:50] OK: Encryption keys rotated (AES-256).</div>
+            </div>
+        </div>
+
+        <!-- Panel 5: Security Clearance -->
+        <div class="panel-box">
+            <div class="panel-title">
+                <span>CLEARANCE LEVEL</span>
+                <span style="color: #0ef;">LEVEL 5</span>
+            </div>
+            <div class="metric-val" style="color: #00ff66; text-shadow: 0 0 10px #00ff66;">ROOT</div>
+            <div class="metric-sub">Operative: Mister Zubair Khan</div>
+            <div style="margin-top: 15px; font-size: 0.75em; color: #a0aec0;">
+                AUTHENTICATION: <span style="color: #0ef;">TOKEN_VERIFIED</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FLOATING VOICE ASSISTANT BUTTON -->
+    <button class="voice-btn" onclick="speakDashboardStatus()">
+        🎙️ SYSTEM REPORT VOICE
+    </button>
+
+    <script>
+        // Safe navigation handler to prevent browser navigation cancellation
+        function safeNavigate() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        // Matrix Background Canvas Logic
+        function initMatrixBg() {
+            const canvas = document.getElementById('matrix-bg');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const chars = '0101010101ABCDEFHIJKLMNOPQRSTUVWXYZ';
+            const fontSize = 12;
+            const cols = Math.floor(canvas.width / fontSize);
+            const drops = Array(cols).fill(1);
+
+            function draw() {
+                ctx.fillStyle = 'rgba(2, 5, 10, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#0ef';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const txt = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(txt, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            setInterval(draw, 40);
+        }
+
+        // Radar Click Sound
+        function triggerScanSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.3);
+            } catch (e) {}
+        }
+
+        // Urdu Voice Synthesizer
+        function speakDashboardStatus() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const text = "Dashboard status clear hai. Tamam security systems optimal tareeqay se kaam kar rahay hain. Khush aamdeed Mister Zubair Khan.";
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.lang = 'ur-PK';
+                msg.rate = 0.95;
+                msg.pitch = 1.0;
+                
+                const voices = window.speechSynthesis.getVoices();
+                const selectedVoice = voices.find(v => v.lang.includes('ur') || v.lang.includes('hi'));
+                if (selectedVoice) msg.voice = selectedVoice;
+
+                window.speechSynthesis.speak(msg);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initMatrixBg();
+        });
+
+        window.addEventListener('beforeunload', () => {
+            safeNavigate();
+        });
+    </script>
+
+</body>
+</html>

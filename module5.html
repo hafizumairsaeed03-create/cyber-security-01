@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 5: Wireless Network Hacking & Defense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #050b14; color: #fff; min-height: 100vh; }
+
+        navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: #081221; border-bottom: 2px solid #0ef; }
+        .logo { font-size: 1.5em; font-weight: 700; color: #0ef; text-decoration: none; font-family: 'Fira Code', monospace; }
+
+        .container { padding: 40px 50px; max-width: 900px; margin: 0 auto; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #0ef; text-decoration: none; font-size: 0.95em; }
+        .back-link:hover { text-decoration: underline; }
+
+        .content-box { background: #081221; border: 1px solid #1c3352; border-radius: 12px; padding: 35px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 238, 255, 0.1); }
+        .content-box h1 { color: #0ef; font-size: 2em; margin-bottom: 10px; border-bottom: 2px solid #1c3352; padding-bottom: 10px; }
+        .subtitle { color: #a0aec0; margin-bottom: 30px; font-size: 0.95em; }
+
+        /* Step Section Styling */
+        .step-item { background: #0c1a2d; border-left: 4px solid #0ef; border-radius: 0 8px 8px 0; padding: 20px; margin-bottom: 20px; }
+        .step-title { color: #0ef; font-size: 1.2em; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .step-desc { color: #cbd5e1; font-size: 0.92em; line-height: 1.8; }
+        .step-desc ul { margin-left: 20px; margin-top: 8px; }
+        .step-desc li { margin-bottom: 5px; }
+
+        .highlight { color: #0ef; font-weight: 600; }
+        .code-box { background: #000; border-left: 4px solid #0ef; padding: 15px; border-radius: 5px; font-family: 'Fira Code', monospace; margin: 12px 0; color: #00ff66; font-size: 0.88em; line-height: 1.6; }
+
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; }
+        .nav-btn { padding: 10px 20px; background: #0ef; color: #050b14; text-decoration: none; font-weight: 600; border-radius: 20px; font-size: 0.9em; transition: 0.3s; }
+        .nav-btn:hover { box-shadow: 0 0 15px #0ef; }
+    </style>
+</head>
+<body>
+
+    <navbar>
+        <a href="home.html" class="logo">&gt;_ CYBER_HUB</a>
+    </navbar>
+
+    <div class="container">
+        <a href="ethical-hacking.html" class="back-link">⬅ Back to Course Modules</a>
+
+        <div class="content-box">
+            <h1>Module 5: Wireless Network Hacking & Defense</h1>
+            <p class="subtitle">Wireless Security mein hum Wi-Fi networks (Routers/Access Points) ki security vulnerabilities audit karna aur wireless signals ko unauthorized interception se bachana seekhte hain.</p>
+
+            <!-- Step 1 -->
+            <div class="step-item">
+                <div class="step-title">📡 Step 1: Wireless Security Protocols (WEP, WPA, WPA2, WPA3)</div>
+                <div class="step-desc">
+                    Wi-Fi networks ko secure karne ke liye waqt ke sath mukhtalif encryption protocols banaye gaye:
+                    <ul>
+                        <li><span class="highlight">WEP (Wired Equivalent Privacy):</span> Sab se purana aur Intehai kamzor protocol. Minton mein hack ho jata hai.</li>
+                        <li><span class="highlight">WPA / WPA2 (Wi-Fi Protected Access):</span> Ziada tar gharon aur offices mein istemal hone wala standard protocol.</li>
+                        <li><span class="highlight">WPA3:</span> Naya aur highly secure protocol jo dictionary attacks se protection deta hai.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-item">
+                <div class="step-title">🛠️ Step 2: Wireless Hacking Tools (Aircrack-ng Suite)</div>
+                <div class="step-desc">
+                    Wireless auditing ke liye Kali Linux mein mashhoor tools ka suite istemal hota hai:
+                    <ul>
+                        <li><span class="highlight">Airmon-ng:</span> Wi-Fi Card ko Normal Mode se <span class="highlight">Monitor Mode</span> mein convert karta hai taake hawa mein maujood tamaam packets capture ho sakein.</li>
+                        <li><span class="highlight">Airodump-ng:</span> Nearby Wi-Fi Routers, unke MAC Addresses (BSSID), aur channels ko scan/record karta hai.</li>
+                        <li><span class="highlight">Aireplay-ng:</span> Deauthentication packets bhej kar connected devices ko router se disconnect (kick) karta hai.</li>
+                        <li><span class="highlight">Aircrack-ng:</span> Captured 4-Way Handshake packets par dictionary attacks chala kar password crack karta hai.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-item">
+                <div class="step-title">⚡ Step 3: WPA2 Handshake Capture Process</div>
+                <div class="step-desc">
+                    WPA2 Wi-Fi Networks ko test karne ka 4-step practical workflow:
+                    
+                    <div class="code-box">
+                        # 1. Wi-Fi Adapter Ko Monitor Mode Mein Lana<br>
+                        airmon-ng start wlan0<br><br>
+
+                        # 2. Target Wi-Fi Router Ka Traffic Record Karna<br>
+                        airodump-ng --bssid [ROUTER_MAC] -c [CHANNEL] -w capture_file wlan0mon<br><br>
+
+                        # 3. Target User Ko Disconnect Karke 4-Way Handshake Capture Karna<br>
+                        aireplay-ng --deauth 10 -a [ROUTER_MAC] -c [CLIENT_MAC] wlan0mon<br><br>
+
+                        # 4. Captured Handshake Par Wordlist Attack Chalana<br>
+                        aircrack-ng -w wordlist.txt capture_file.cap
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-item">
+                <div class="step-title">😈 Step 4: Rogue AP & Evil Twin Attacks</div>
+                <div class="step-desc">
+                    Is attack mein hacker bilkul target router jesa naqli Access Point (Wi-Fi) banata hai:
+                    <ul>
+                        <li><span class="highlight">Evil Twin:</span> Same Wi-Fi name (SSID) bana kar asal router ko jam kar diya jata hai. Users automatic naqli Wi-Fi se connect ho jate hain aur unka sensitive traffic capture ho jata hai.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-item">
+                <div class="step-title">🛡️ Step 5: Wi-Fi Defense & Security Hardening</div>
+                <div class="step-desc">
+                    Apne Wi-Fi Router ko wireless attacks se bachane ke zaroori steps:
+                    <ul>
+                        <li><span class="highlight">Disable WPS:</span> Router settings mein WPS (Wi-Fi Protected Setup) ko hamesha OFF rakhein.</li>
+                        <li><span class="highlight">Use Strong Encryption:</span> Minimum WPA2-AES ya WPA3 Encryption mode select karein.</li>
+                        <li><span class="highlight">Strong Passwords:</span> Passwords mein Numbers, Symbols, aur Upper/Lower case letters istemal karein.</li>
+                        <li><span class="highlight">Router Firmware Updates:</span> Router ke software ko regular basis par update rakhein.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <a href="module4.html" class="nav-btn">⬅ Previous (Module 4)</a>
+                <a href="ethical-hacking.html" class="nav-btn">Course Overview 🏠</a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Hub | Ethical Hacking Defense & Hardening</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fira Code', monospace; }
+        body { background: #02050a; color: #0ef; min-height: 100vh; padding-bottom: 50px; position: relative; overflow-x: hidden; }
+
+        /* BACKGROUND MATRIX CANVAS */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+
+        /* Navigation Header */
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 40px; 
+            background: rgba(8, 18, 33, 0.9); 
+            border-bottom: 2px solid #0ef; 
+            box-shadow: 0 0 15px rgba(0, 238, 255, 0.3); 
+            backdrop-filter: blur(5px);
+        }
+        .logo { font-size: 1.4em; font-weight: 700; color: #0ef; text-shadow: 0 0 10px #0ef; }
+        .nav-links { display: flex; list-style: none; gap: 20px; }
+        .nav-links a { color: #fff; text-decoration: none; font-size: 0.9em; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #0ef; text-shadow: 0 0 8px #0ef; }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            padding: 20px 20px 10px;
+        }
+        .page-header h1 {
+            font-size: 2em;
+            color: #fff;
+            text-shadow: 0 0 10px #0ef, 0 0 20px #0ef;
+            margin-bottom: 5px;
+        }
+        .page-header p {
+            color: #00ff66;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+        }
+
+        /* GLOWING LIGHT CIRCLE / DEFENSE CORE SECTION */
+        .cyber-circle-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .neon-circle-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .glowing-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid #0ef;
+            box-shadow: 0 0 20px #0ef, inset 0 0 20px #0ef;
+            animation: pulseCircle 2s infinite ease-in-out;
+        }
+        .glowing-circle-outer {
+            position: absolute;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            border: 1px dashed rgba(0, 238, 255, 0.6);
+            animation: rotateRadar 10s infinite linear;
+        }
+        .circle-core-text {
+            font-size: 0.8em;
+            font-weight: bold;
+            color: #00ff66;
+            text-shadow: 0 0 10px #00ff66;
+            text-align: center;
+            z-index: 2;
+        }
+
+        @keyframes pulseCircle {
+            0% { transform: scale(0.95); box-shadow: 0 0 10px #0ef, inset 0 0 10px #0ef; }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px #0ef, inset 0 0 30px #0ef; border-color: #00ff66; }
+            100% { transform: scale(0.95); box-shadow: 0 0 10px #0ef, inset 0 0 10px #0ef; }
+        }
+        @keyframes rotateRadar {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Layout Grid */
+        .defense-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 0 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Panels */
+        .panel-box {
+            background: rgba(8, 18, 33, 0.85);
+            border: 1px solid #1c3352;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            margin-bottom: 20px;
+        }
+        .panel-title {
+            font-size: 1em;
+            color: #0ef;
+            border-bottom: 1px solid #1c3352;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Status Cards */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .status-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #1c3352;
+            padding: 12px;
+            border-radius: 5px;
+        }
+        .status-card h4 { font-size: 0.75em; color: #888; margin-bottom: 5px; }
+        .status-card p { font-size: 1.05em; font-weight: bold; color: #00ff66; }
+
+        /* Code Viewer */
+        .code-snippet {
+            background: #01050a;
+            border: 1px solid #1c3352;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 0.78em;
+            color: #39ff14;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+        .code-keyword { color: #ff0055; font-weight: bold; }
+        .code-func { color: #0ef; }
+        .code-string { color: #eccc68; }
+        .code-comment { color: #576574; font-style: italic; }
+
+        /* Live Logs */
+        .log-stream {
+            background: #000;
+            border: 1px solid #1c3352;
+            border-radius: 5px;
+            padding: 12px;
+            height: 200px;
+            font-size: 0.75em;
+            overflow-y: auto;
+            color: #0ef;
+        }
+        .log-entry { margin-bottom: 6px; }
+        .log-block { color: #ff0055; font-weight: bold; }
+        .log-pass { color: #00ff66; font-weight: bold; }
+
+        @media (max-width: 900px) {
+            .defense-container { grid-template-columns: 1fr; padding: 0 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Matrix Rain -->
+    <canvas id="matrix-bg"></canvas>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo">&gt;_ CYBER_HUB</div>
+        <ul class="nav-links">
+            <li><a href="home.html">Home 🏠</a></li>
+            <li><a href="dashboard.html">Dashboard 📊</a></li>
+            <li><a href="pentest.html">Pentest Lab 🧪</a></li>
+            <li><a href="defense.html" class="active">Defense & Hardening 🛡️</a></li>
+        </ul>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>ETHICAL HACKING DEFENSE & SECURE CODING</h1>
+        <p>[ REAL-WORLD VULNERABILITY MITIGATION & HARDENING MODULES ]</p>
+    </div>
+
+    <!-- Glowing Light Circle Section -->
+    <div class="cyber-circle-section">
+        <div class="neon-circle-container">
+            <div class="glowing-circle-outer"></div>
+            <div class="glowing-circle"></div>
+            <div class="circle-core-text">SHIELD<br>ACTIVE</div>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="defense-container">
+        
+        <!-- Left Column: SIEM Logs & Controls -->
+        <div>
+            <div class="panel-box">
+                <div class="panel-title">
+                    <span>🛡️ ETHICAL HACKING DEFENSE METRICS</span>
+                    <span style="color: #00ff66; font-size: 0.8em;">ACTIVE HARDENING</span>
+                </div>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <h4>SQLI PROTECTION</h4>
+                        <p>PREPARED STMTS</p>
+                    </div>
+                    <div class="status-card">
+                        <h4>XSS SANITIZATION</h4>
+                        <p>STRICT ESCAPING</p>
+                    </div>
+                    <div class="status-card">
+                        <h4>AUTH SECURITY</h4>
+                        <p>BCRYPT + SALT</p>
+                    </div>
+                    <div class="status-card">
+                        <h4>CSRF PROTECTION</h4>
+                        <p>TOKENS VALIDATED</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-title">
+                    <span>📡 LIVE SIEM DEFENSE LOGS</span>
+                    <span style="color: #ffbd2e; font-size: 0.75em;">LOG MONITOR</span>
+                </div>
+                <div class="log-stream" id="logStream">
+                    <div class="log-entry"><span class="log-pass">[SYSTEM]</span> Defensive controls online. Hardening applied.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Defensive Code Modules -->
+        <div>
+            <!-- Module 1: Preventing SQLi -->
+            <div class="panel-box">
+                <div class="panel-title">
+                    <span>💻 1. SQL INJECTION PATCH (PYTHON)</span>
+                </div>
+                <div class="code-snippet"><span class="code-comment"># SECURE: Using Parameterized Queries to block SQLi</span>
+<span class="code-keyword">import</span> sqlite3
+
+<span class="code-keyword">def</span> <span class="code-func">safe_db_query</span>(user_input):
+    conn = sqlite3.connect(<span class="code-string">"app.db"</span>)
+    cursor = conn.cursor()
+    <span class="code-comment"># Unsafe query avoided. Parameters handle input safely.</span>
+    query = <span class="code-string">"SELECT * FROM users WHERE username = ?"</span>
+    cursor.execute(query, (user_input,))
+    <span class="code-keyword">return</span> cursor.fetchall()
+</div>
+            </div>
+
+            <!-- Module 2: Password Hashing -->
+            <div class="panel-box">
+                <div class="panel-title">
+                    <span>🔐 2. SECURE PASSWORD HASHING (BCRYPT)</span>
+                </div>
+                <div class="code-snippet"><span class="code-comment"># SECURE: Bcrypt Hashing with Salt against Credential Stuffing</span>
+<span class="code-keyword">import</span> bcrypt
+
+<span class="code-keyword">def</span> <span class="code-func">hash_user_password</span>(raw_password):
+    salt = bcrypt.gensalt(rounds=12)
+    hashed_pwd = bcrypt.hashpw(raw_password.encode(<span class="code-string">'utf-8'</span>), salt)
+    <span class="code-keyword">return</span> hashed_pwd
+</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /* Matrix Background */
+        const canvas = document.getElementById('matrix-bg');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const matrixChars = "0101010101DEFENSE_HARDENING_PATCH_SECURE_FIX";
+        const fontSize = 14;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function drawMatrixRain() {
+            ctx.fillStyle = "rgba(2, 5, 10, 0.08)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0ef";
+            ctx.font = fontSize + "px monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrixRain, 35);
+
+        /* Real-Time Defense Logs */
+        const logStream = document.getElementById('logStream');
+        const threatEvents = [
+            { event: "SQLi Attempt Neutralized (Prepared Stmt)", ip: "192.168.1.102", status: "log-pass" },
+            { event: "XSS Tag Stripped from Form Data", ip: "10.0.2.14", status: "log-pass" },
+            { event: "CSRF Token Validation Passed", ip: "172.16.0.5", status: "log-pass" },
+            { event: "Unauthorized Admin Bypass Blocked", ip: "192.168.1.200", status: "log-block" }
+        ];
+
+        function pushLog() {
+            const item = threatEvents[Math.flouor ? Math.floor(Math.random() * threatEvents.length) : Math.floor(Math.random() * threatEvents.length)];
+            const time = new Date().toLocaleTimeString();
+            const el = document.createElement('div');
+            el.className = 'log-entry';
+            el.innerHTML = `[${time}] <span class="${item.status}">[DEFENDED]</span> ${item.event} - Target IP: ${item.ip}`;
+            logStream.appendChild(el);
+            logStream.scrollTop = logStream.scrollHeight;
+        }
+
+        setInterval(pushLog, 2800);
+    </script>
+</body>
+</html>

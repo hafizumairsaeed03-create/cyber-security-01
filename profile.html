@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile Details | CyberHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #02050a; color: #fff; min-height: 100vh; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
+
+        /* Background Matrix Canvas */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* Navbar Styling */
+        nav, .navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 40px; 
+            background: rgba(8, 18, 33, 0.9); 
+            border-bottom: 2px solid #0ef; 
+            box-shadow: 0 0 15px rgba(0, 238, 255, 0.3); 
+            backdrop-filter: blur(5px);
+        }
+        .logo { font-family: 'Fira Code', monospace; font-size: 1.4em; color: #0ef; font-weight: 700; text-decoration: none; text-shadow: 0 0 10px #0ef; }
+        .nav-links { display: flex; list-style: none; gap: 20px; }
+        .nav-links a { color: #fff; text-decoration: none; font-weight: 500; transition: 0.3s; padding: 6px 12px; border-radius: 5px; font-size: 0.9em; }
+        .nav-links a:hover, .nav-links a.active { color: #0ef; background: rgba(0, 238, 255, 0.1); text-shadow: 0 0 8px #0ef; }
+
+        /* Form Card Layout */
+        .wrapper { display: flex; justify-content: center; align-items: center; flex: 1; padding: 40px 20px; }
+        .profile-container { 
+            background: rgba(8, 18, 33, 0.85); 
+            padding: 35px; 
+            border-radius: 12px; 
+            border: 1px solid #0ef; 
+            width: 100%; 
+            max-width: 500px; 
+            box-shadow: 0 0 25px rgba(0, 238, 255, 0.25); 
+            backdrop-filter: blur(8px);
+        }
+        .profile-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #1c3352; padding-bottom: 15px; }
+        .profile-header h2 { color: #0ef; font-family: 'Fira Code', monospace; font-size: 1.4em; text-shadow: 0 0 8px rgba(0,238,255,0.5); }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 6px; color: #0ef; font-size: 0.85em; font-family: 'Fira Code', monospace; }
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; 
+            padding: 12px; 
+            background: #02050a; 
+            border: 1px solid #1c3352; 
+            border-radius: 8px; 
+            color: #fff; 
+            outline: none; 
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            border-color: #0ef; 
+            box-shadow: 0 0 10px rgba(0, 238, 255, 0.3);
+        }
+
+        .save-btn { 
+            width: 100%; 
+            padding: 12px; 
+            background: #0ef; 
+            color: #02050a; 
+            border: none; 
+            border-radius: 25px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 1em; 
+            transition: 0.3s; 
+            margin-top: 10px; 
+            font-family: 'Fira Code', monospace;
+        }
+        .save-btn:hover { box-shadow: 0 0 20px #0ef; transform: translateY(-2px); }
+
+        @media (max-width: 650px) {
+            nav { flex-direction: column; gap: 12px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Matrix Simulation -->
+    <canvas id="matrix-bg"></canvas>
+
+    <!-- Navbar Connection -->
+    <nav class="navbar">
+        <a href="home.html" class="logo">CyberHub <span style="font-size: 12px; color: #00f3ff;">[ By Zubair Khan ]</span></a>
+        <ul class="nav-links">
+            <li><a href="home.html">Home 🏠</a></li>
+            <li><a href="dashboard.html">Dashboard 📊</a></li>
+            <li><a href="profile.html" class="active">Profile 👤</a></li>
+        </ul>
+    </nav>
+
+    <div class="wrapper">
+        <div class="profile-container">
+            <div class="profile-header">
+                <h2>Edit User Profile</h2>
+            </div>
+
+            <!-- Profile Input Form -->
+            <form id="profileForm">
+                <div class="form-group">
+                    <label>FULL NAME:</label>
+                    <input type="text" id="fullName" placeholder="Enter Full Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>EMAIL ADDRESS:</label>
+                    <input type="email" id="email" placeholder="Enter Email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>PHONE NUMBER:</label>
+                    <input type="tel" id="phone" placeholder="03001234567" required>
+                </div>
+
+                <div class="form-group">
+                    <label>GENDER:</label>
+                    <select id="gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>ADDRESS:</label>
+                    <textarea id="address" rows="3" placeholder="Enter Address..." required></textarea>
+                </div>
+
+                <button type="submit" class="save-btn">💾 Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Matrix Background Animation
+        const canvas = document.getElementById('matrix-bg');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const chars = '0101010101ABCDEFHIJKLMNOPQRSTUVWXYZ';
+            const fontSize = 12;
+            const cols = Math.floor(canvas.width / fontSize);
+            const drops = Array(cols).fill(1);
+
+            function draw() {
+                ctx.fillStyle = 'rgba(2, 5, 10, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#0ef';
+                ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < drops.length; i++) {
+                    const txt = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(txt, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }
+            setInterval(draw, 40);
+        }
+
+        // Local Storage Sync Logic
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedData = localStorage.getItem('userProfileData');
+            if (savedData) {
+                const userData = JSON.parse(savedData);
+                document.getElementById('fullName').value = userData.fullName || '';
+                document.getElementById('email').value = userData.email || '';
+                document.getElementById('phone').value = userData.phone || '';
+                document.getElementById('gender').value = userData.gender || 'Male';
+                document.getElementById('address').value = userData.address || '';
+            }
+        });
+
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const updatedData = {
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                gender: document.getElementById('gender').value,
+                address: document.getElementById('address').value.trim()
+            };
+
+            localStorage.setItem('userProfileData', JSON.stringify(updatedData));
+            alert("Profile successfully save ho gayi hai!");
+            window.location.href = "dashboard.html";
+        });
+    </script>
+</body>
+</html>

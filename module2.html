@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 2: Networking & IP Scanning Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #050b14; color: #fff; min-height: 100vh; }
+
+        navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: #081221; border-bottom: 2px solid #0ef; }
+        .logo { font-size: 1.5em; font-weight: 700; color: #0ef; text-decoration: none; font-family: 'Fira Code', monospace; }
+
+        .container { padding: 40px 50px; max-width: 900px; margin: 0 auto; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #0ef; text-decoration: none; font-size: 0.95em; }
+        .back-link:hover { text-decoration: underline; }
+
+        .content-box { background: #081221; border: 1px solid #1c3352; border-radius: 12px; padding: 35px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 238, 255, 0.1); }
+        .content-box h1 { color: #0ef; font-size: 2em; margin-bottom: 10px; border-bottom: 2px solid #1c3352; padding-bottom: 10px; }
+        .subtitle { color: #a0aec0; margin-bottom: 30px; font-size: 0.95em; }
+
+        /* Step Section Styling */
+        .step-item { background: #0c1a2d; border-left: 4px solid #0ef; border-radius: 0 8px 8px 0; padding: 20px; margin-bottom: 20px; }
+        .step-title { color: #0ef; font-size: 1.2em; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .step-desc { color: #cbd5e1; font-size: 0.92em; line-height: 1.8; }
+        .step-desc ul { margin-left: 20px; margin-top: 8px; }
+        .step-desc li { margin-bottom: 5px; }
+
+        .highlight { color: #0ef; font-weight: 600; }
+        .code-box { background: #000; border-left: 4px solid #0ef; padding: 15px; border-radius: 5px; font-family: 'Fira Code', monospace; margin: 12px 0; color: #00ff66; font-size: 0.88em; line-height: 1.6; }
+
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; }
+        .nav-btn { padding: 10px 20px; background: #0ef; color: #050b14; text-decoration: none; font-weight: 600; border-radius: 20px; font-size: 0.9em; transition: 0.3s; }
+        .nav-btn:hover { box-shadow: 0 0 15px #0ef; }
+    </style>
+</head>
+<body>
+
+    <navbar>
+        <a href="home.html" class="logo">&gt;_ CYBER_HUB</a>
+    </navbar>
+
+    <div class="container">
+        <a href="ethical-hacking.html" class="back-link">⬅ Back to Course Modules</a>
+
+        <div class="content-box">
+            <h1>Module 2: Networking Fundamentals & IP Scanning</h1>
+            <p class="subtitle">Ethical Hacking mein Networking sab se ehem step hai. Jab tak aapko network aur IP ki samajh nahi hogi, aap security audit nahi kar sakte.</p>
+
+            <!-- Step 1 -->
+            <div class="step-item">
+                <div class="step-title">🌐 Step 1: Computer Network Kya Hota Hai?</div>
+                <div class="step-desc">
+                    Jab do ya do se ziada devices (Mobiles, Computers, Servers) aapas mein data share karne ke liye connect hotay hain, usay <span class="highlight">Network</span> kehte hain.
+                    <br><br>
+                    Hacker sab se pehle target ke network ki maloomat ik इकट्ठा karta hai ke us network par kitne computers ya devices active hain.
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-item">
+                <div class="step-title">🔢 Step 2: IP Address Kya Hai? (Public vs Private)</div>
+                <div class="step-desc">
+                    Jaise har ghar ka ek unique address hota hai, waise hi internet par har device ka ek pehchan number hota hai jise <span class="highlight">IP Address</span> kehte hain.
+                    <ul>
+                        <li><span class="highlight">IPv4:</span> Pehla format hota hai (e.g., <code>192.168.1.1</code>)</li>
+                        <li><span class="highlight">Private IP:</span> Aapke Wi-Fi router ke andar local devices ko milta hai.</li>
+                        <li><span class="highlight">Public IP:</span> Internet par duniya bhar mein aapki pehchan hota hai.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-item">
+                <div class="step-title">🚪 Step 3: Ports Aur Protocols Kya Hote Hain?</div>
+                <div class="step-desc">
+                    Ek computer par mukhtalif services chal rahi hoti hain. Un services tak pahunchne ke darwazon ko <span class="highlight">Ports</span> kehte hain (Total 0 se 65535 ports hote hain):
+                    <ul>
+                        <li><span class="highlight">Port 80 (HTTP):</span> Normal websites kholne ke liye.</li>
+                        <li><span class="highlight">Port 443 (HTTPS):</span> Secure websites (Encrypted) ke liye.</li>
+                        <li><span class="highlight">Port 21 (FTP):</span> Files transfer karne ke liye.</li>
+                        <li><span class="highlight">Port 22 (SSH):</span> Server ko remotely control karne ke liye.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-item">
+                <div class="step-title">🔍 Step 4: IP Scanning Kya Hai Aur Kyun Ki Jaati Hai?</div>
+                <div class="step-desc">
+                    IP Scanning ka maqsad yeh dhoondna hota hai ke target system par kaun kaun se ports <span class="highlight">OPEN</span> hain.
+                    <br><br>
+                    Agar koi kharab ya purana port khula reh jaye, to hacker usi khule darwaze (Open Port) se system mein enter hone ki koshish karta hai.
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-item">
+                <div class="step-title">⚡ Step 5: Nmap Tool (Practical Commands)</div>
+                <div class="step-desc">
+                    Industry ka sab se mashhoor scanning tool <span class="highlight">Nmap (Network Mapper)</span> hai. Kali Linux mein yeh terminal commands istemal hoti hain:
+
+                    <div class="code-box">
+                        # Single IP Address Ko Scan Karna<br>
+                        nmap 192.168.1.1<br><br>
+
+                        # System Ka Operating System Aur Services Detect Karna<br>
+                        nmap -A 192.168.1.1<br><br>
+
+                        # Poore Network Ke Active Live Hosts Dhoondna (Ping Sweep)<br>
+                        nmap -sn 192.168.1.0/24
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <a href="module1.html" class="nav-btn">⬅ Previous (Module 1)</a>
+                <a href="module3.html" class="nav-btn">Next (Module 3) ➔</a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

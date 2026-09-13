@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Academy | Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fira Code', monospace; }
+        body { background: #050b14; color: #0ef; min-height: 100vh; overflow-x: hidden; }
+
+        /* === CYBER SPLASH OVERLAY STYLES === */
+        #cyber-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #02040a;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            overflow: hidden;
+        }
+
+        #cyber-splash.splash-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #matrixCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.35;
+        }
+
+        .splash-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .splash-circle-container {
+            position: relative;
+            width: 230px;
+            height: 230px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .splash-circle-outer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px dashed #0ef;
+            box-shadow: 0 0 20px rgba(0, 238, 255, 0.6);
+            animation: spinCircle 8s linear infinite;
+        }
+
+        .splash-circle-mid {
+            position: absolute;
+            width: 85%;
+            height: 85%;
+            border-radius: 50%;
+            border: 2px dotted #00ff66;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.5);
+            animation: spinCircleRev 6s linear infinite;
+        }
+
+        .splash-circle-inner {
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            border: 2px solid #ff0055;
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.7);
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes spinCircle {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spinCircleRev {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            100% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .hacker-mask-box {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #0ef;
+            box-shadow: 0 0 20px #0ef, inset 0 0 10px #0ef;
+            z-index: 15;
+            background: #000;
+        }
+
+        .hacker-mask-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .splash-text-box {
+            margin-top: 15px;
+            z-index: 15;
+        }
+
+        .splash-title {
+            color: #fff;
+            font-size: 22px;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #0ef, 0 0 20px #0ef;
+            margin-bottom: 5px;
+        }
+
+        .splash-subtitle {
+            color: #00ff66;
+            font-size: 13px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px #00ff66;
+        }
+
+        .splash-welcome-name {
+            color: #ff0055;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px #ff0055;
+        }
+
+        #startCyberBtn {
+            background: #081221;
+            border: 2px solid #0ef;
+            color: #0ef;
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 238, 255, 0.4);
+        }
+
+        #startCyberBtn:hover {
+            background: #0ef;
+            color: #000;
+            box-shadow: 0 0 30px #0ef, 0 0 50px #0ef;
+        }
+
+        .neon-text { text-shadow: 0 0 10px #0ef, 0 0 20px #0ef; }
+        .red-glow { color: #ff0055; text-shadow: 0 0 10px #ff0055; }
+        .green-glow { color: #00ff66; text-shadow: 0 0 10px #00ff66; }
+
+        /* Navbar Styling */
+        nav, .navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 40px; 
+            background: rgba(8, 18, 33, 0.9); 
+            border-bottom: 2px solid #0ef; 
+            box-shadow: 0 0 15px rgba(0, 238, 255, 0.3); 
+            backdrop-filter: blur(5px);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo { font-family: 'Fira Code', monospace; font-size: 1.4em; color: #0ef; font-weight: 700; text-decoration: none; text-shadow: 0 0 10px #0ef; }
+        .nav-links { display: flex; list-style: none; gap: 20px; align-items: center; }
+        .nav-links a { color: #fff; text-decoration: none; font-weight: 500; transition: 0.3s; padding: 6px 12px; border-radius: 5px; font-size: 0.9em; font-family: 'Poppins', sans-serif; }
+        .nav-links a:hover, .nav-links a.active { color: #0ef; background: rgba(0, 238, 255, 0.1); text-shadow: 0 0 8px #0ef; }
+
+        /* Audio Control Button */
+        .audio-btn {
+            background: #081221;
+            border: 1px solid #0ef;
+            color: #0ef;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(0, 238, 255, 0.2);
+            font-family: 'Fira Code', monospace;
+        }
+        .audio-btn:hover { background: #0ef; color: #050b14; font-weight: bold; }
+
+        /* MAIN FLEX CONTAINER */
+        .main-wrapper {
+            display: flex;
+            gap: 25px;
+            padding: 30px 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        /* 3 LIVE TERMINALS (LEFT SIDE) */
+        .multi-terminals {
+            flex: 1;
+            min-width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .side-terminal {
+            background: #000000;
+            border: 1px solid #1c3352;
+            border-left: 3px solid #0ef;
+            border-radius: 8px;
+            height: 165px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 238, 255, 0.1);
+        }
+
+        .side-terminal-header {
+            background: #081221;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid #1c3352;
+        }
+
+        .side-terminal-title {
+            color: #0ef;
+            font-size: 0.75em;
+            margin-left: auto;
+        }
+
+        .side-terminal-body {
+            padding: 10px;
+            color: #39ff14;
+            font-size: 0.78em;
+            line-height: 1.4;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            flex: 1;
+        }
+
+        /* Syntax Highlighting Colors */
+        .code-keyword { color: #ff0055; font-weight: bold; }
+        .code-func { color: #0ef; }
+        .code-string { color: #eccc68; }
+        .code-comment { color: #4b5563; font-style: italic; }
+
+        /* HOME CONTENT (RIGHT SIDE) */
+        .home-content {
+            flex: 1.4;
+            min-width: 400px;
+        }
+
+        /* Hero Terminal Section */
+        .terminal-card { 
+            background: #0c1a2d; 
+            border: 1px solid #0ef; 
+            border-radius: 10px; 
+            padding: 25px; 
+            box-shadow: 0 0 20px rgba(0, 238, 255, 0.15); 
+            margin-bottom: 30px; 
+            position: relative; 
+            min-height: 180px; 
+        }
+        .terminal-header { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 15px; 
+            border-bottom: 1px solid #1c3352; 
+            padding-bottom: 10px; 
+            align-items: center; 
+        }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .typing-text { font-size: 1.1em; line-height: 1.8; color: #0ef; }
+        
+        /* Blinking Cursor Effect */
+        .cursor { 
+            display: inline-block; 
+            width: 10px; 
+            height: 18px; 
+            background-color: #0ef; 
+            margin-left: 5px; 
+            animation: blink 0.8s infinite; 
+            vertical-align: middle; 
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Grid Section */
+        .hacking-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .hack-card { 
+            background: #081221; 
+            border: 1px solid #1c3352; 
+            padding: 20px; 
+            border-radius: 10px; 
+            transition: 0.4s; 
+            position: relative; 
+            overflow: hidden; 
+            cursor: pointer; 
+            text-decoration: none; 
+            display: block; 
+        }
+        .hack-card:hover { border-color: #0ef; transform: translateY(-5px); box-shadow: 0 0 20px rgba(0,238,255,0.2); }
+        .hack-card h3 { color: #0ef; margin-bottom: 10px; font-size: 1.1em; }
+        .hack-card p { color: #a0aec0; font-family: 'Poppins', sans-serif; font-size: 0.85em; line-height: 1.6; }
+
+        /* System Status Bar */
+        .status-box { 
+            background: #11001c; 
+            border: 1px solid #ff0055; 
+            padding: 15px 25px; 
+            border-radius: 8px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-top: 25px; 
+            font-size: 0.85em; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+        }
+
+        @media (max-width: 650px) {
+            nav { flex-direction: column; text-align: center; }
+            .nav-links { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- === CYBER INTRO SPLASH SCREEN WITH MATRIX BACKGROUND === -->
+    <div id="cyber-splash">
+        <!-- Matrix Code Background Canvas -->
+        <canvas id="matrixCanvas"></canvas>
+
+        <div class="splash-content">
+            <div class="splash-circle-container">
+                <!-- Outer Cyan Ring -->
+                <div class="splash-circle-outer"></div>
+                <!-- Middle Green Ring -->
+                <div class="splash-circle-mid"></div>
+                <!-- Inner Pink Pulse Ring -->
+                <div class="splash-circle-inner"></div>
+                
+                <!-- Hacker Mask Image Container -->
+                <div class="hacker-mask-box">
+                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&auto=format&fit=crop&q=80" alt="Hacker Mask" class="hacker-mask-img">
+                </div>
+            </div>
+
+            <!-- Text Box -->
+            <div class="splash-text-box">
+                <h1 class="splash-title">SYSTEM INITIALIZED</h1>
+                <p class="splash-subtitle">[ AUDIO ENCRYPTION LOADED ]</p>
+                <p class="splash-welcome-name">⚡ Mister Zubair Khan Welcomes You ⚡</p>
+                
+                <!-- Click to Initialize Button -->
+                <button id="startCyberBtn" onclick="initializeCyberSystem()">INITIALIZE SYSTEM ⚡</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="cyber-ambient-loop" src="https://actions.google.com/sounds/v1/science_fiction/spaceship_engine_hum.ogg" loop preload="auto"></audio>
+
+    <!-- Navigation Bar Connected -->
+    <nav class="navbar">
+        <a href="home.html" class="logo">CyberHub <span style="font-size: 12px; color: #00f3ff;">[ By Zubair Khan ]</span></a>
+        <ul class="nav-links">
+            <li><a href="home.html" class="active">Home 🏠</a></li>
+            <li><a href="dashboard.html">Dashboard 📊</a></li>
+            <li><a href="profile.html">Profile 👤</a></li>
+            <li><button class="audio-btn" onclick="playVoice()">🔊 Test Voice Sound</button></li>
+        </ul>
+    </nav>
+
+    <div class="main-wrapper">
+        
+        <!-- LEFT SIDE: 3 Live Coding Terminals -->
+        <div class="multi-terminals">
+            <div class="side-terminal">
+                <div class="side-terminal-header">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                    <span class="side-terminal-title">TERMINAL_1 // security_scan.js</span>
+                </div>
+                <div class="side-terminal-body" id="side-term-1"></div>
+            </div>
+
+            <div class="side-terminal">
+                <div class="side-terminal-header">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                    <span class="side-terminal-title">TERMINAL_2 // penetration_core.py</span>
+                </div>
+                <div class="side-terminal-body" id="side-term-2"></div>
+            </div>
+
+            <div class="side-terminal">
+                <div class="side-terminal-header">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                    <span class="side-terminal-title">TERMINAL_3 // hash_verifier.cpp</span>
+                </div>
+                <div class="side-terminal-body" id="side-term-3"></div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: Main Content -->
+        <div class="home-content">
+            
+            <!-- Auto Typing Hacker Terminal -->
+            <div class="terminal-card">
+                <div class="terminal-header">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                    <span style="color: #6688aa; font-size: 0.8em; margin-left: 10px;">root@cyberhub-pentest:~# terminal_session_active</span>
+                </div>
+                
+                <div class="typing-text">
+                    <div id="cmd-line-1"></div>
+                    <div id="cmd-line-2"></div>
+                    <div id="cmd-line-3"></div>
+                </div>
+            </div>
+
+            <!-- Hacker Courses Section -->
+            <h2 style="margin-bottom: 20px; color: #fff; font-family: 'Poppins', sans-serif;">Specialized Cyber Modules</h2>
+            
+            <div class="hacking-grid">
+                <a href="ethical-hacking.html" class="hack-card">
+                    <h3>⚡ Ethical Hacking & Security ➔</h3>
+                    <p>System vulnerabilities find karna aur networks ko unauthorized access se secure rakhna seekhein.</p>
+                </a>
+
+                <a href="pentest.html" class="hack-card">
+                    <h3>👾 Penetration Testing ➔</h3>
+                    <p>Live servers aur web apps par security testing karke weaknesses highlight karne ki hands-on training.</p>
+                </a>
+
+                <a href="ethical-hacking.html" class="hack-card">
+                    <h3>💻 Cyber Defense & Coding ➔</h3>
+                    <p>Python aur C++ ki madad se custom hacking tools aur automated defense scripts tayar karein.</p>
+                </a>
+            </div>
+
+            <!-- Security Status Footer Bar -->
+            <div class="status-box">
+                <span>CONTACT: <strong style="color: #0ef;">03147357078</strong></span>
+                <span>FIREWALL: <strong style="color: #00ff66;">ACTIVE</strong></span>
+                <span>ENCRYPTION: <strong class="red-glow">AES-256 BIT</strong></span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // Matrix Background Animation Engine
+        function initMatrixEffect() {
+            const canvas = document.getElementById('matrixCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
+            const fontSize = 14;
+            const columns = Math.floor(canvas.width / fontSize);
+            const drops = Array(columns).fill(1);
+
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(2, 4, 10, 0.08)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#0f0';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            setInterval(drawMatrix, 33);
+        }
+
+        // Audio Engine Setup
+        const CYBER_AMBIENT_URL = "https://actions.google.com/sounds/v1/science_fiction/spaceship_engine_hum.ogg";
+        let ambientAudio = new Audio(CYBER_AMBIENT_URL);
+        ambientAudio.loop = true;
+        ambientAudio.volume = 0.25;
+
+        let globalAudioCtx = null;
+        function getAudioContext() {
+            if (!globalAudioCtx) {
+                globalAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (globalAudioCtx.state === 'suspended') {
+                globalAudioCtx.resume();
+            }
+            return globalAudioCtx;
+        }
+
+        function playTypingClick() {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(1400 + Math.random() * 300, ctx.currentTime);
+                gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.025);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.025);
+            } catch (e) {}
+        }
+
+        function playHighTechCyberFX(onComplete) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(3200, ctx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.5, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.5);
+
+                setTimeout(() => {
+                    if (onComplete) onComplete();
+                }, 500);
+            } catch(e) {
+                if (onComplete) onComplete();
+            }
+        }
+
+        // Urdu Voice Synthesizer
+        function playVoice() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const textToSpeak = "System online ho chuka hai. Cyber Hub Mainframe mein khush aamdeed. Mister Zubair Khan aap ko khush aamdeed kehte hain.";
+                const msg = new SpeechSynthesisUtterance(textToSpeak);
+                msg.rate = 0.95;  
+                msg.pitch = 1.0;  
+                msg.volume = 1.0; 
+                window.speechSynthesis.speak(msg);
+            }
+        }
+
+        // Initialize Function on Button Click
+        function initializeCyberSystem() {
+            const splash = document.getElementById('cyber-splash');
+
+            getAudioContext();
+            ambientAudio.play().catch(e => console.log(e));
+
+            playHighTechCyberFX(() => {
+                playVoice();
+            });
+
+            // Hide Splash Screen
+            if (splash) splash.classList.add('splash-hidden');
+
+            // Start Terminal Typing
+            setTimeout(typeCommand, 300);
+            startSideTerminal("side-term-1", codeSnippet1);
+            startSideTerminal("side-term-2", codeSnippet2);
+            startSideTerminal("side-term-3", codeSnippet3);
+        }
+
+        // Terminal Typing Functions
+        const commandText = "root@cyberhub-pentest:~# ./start_exploit.sh";
+        const line1 = document.getElementById("cmd-line-1");
+        const line2 = document.getElementById("cmd-line-2");
+        const line3 = document.getElementById("cmd-line-3");
+        let index = 0;
+
+        function typeCommand() {
+            if (index < commandText.length) {
+                line1.innerHTML = commandText.substring(0, index + 1) + '<span class="cursor"></span>';
+                playTypingClick();
+                index++;
+                setTimeout(typeCommand, 60);
+            } else {
+                line1.innerHTML = commandText;
+                setTimeout(() => {
+                    line2.innerHTML = '> EXPLOIT INITIALIZED... [PAYLOAD INJECTED]';
+                    playTypingClick();
+                }, 500);
+
+                setTimeout(() => {
+                    line3.innerHTML = `> WELCOME AGENT <span class="neon-text">OPERATIVE</span>. SYSTEM ACCESS: <span class="green-glow">GRANTED</span> <span class="cursor"></span>`;
+                    playTypingClick();
+                }, 1200);
+            }
+        }
+
+        const codeSnippet1 = `// Terminal 1: Security Scan\nimport { Firewall } from '@cyber/core';\nasync function runScan() {\n    console.log('[+] Port Scan Active...');\n    const status = await Firewall.check();\n    console.log('[OK] No Breach Found.');\n}\nrunScan();`;
+
+        const codeSnippet2 = `# Terminal 2: Pentest Payload\nimport socket\ndef inject(ip):\n    s = socket.socket()\n    s.connect((ip, 80))\n    print("[+] ACCESS GRANTED")\ninject("192.168.1.101")`;
+
+        const codeSnippet3 = `// Terminal 3: Encryption Matrix\n#include <iostream>\nint main() {\n    std::cout << "[+] AES-256 Key Active" << std::endl;\n    return 0;\n}`;
+
+        function startSideTerminal(elementId, snippet) {
+            let idx = 0;
+            const el = document.getElementById(elementId);
+            if (!el) return;
+
+            function run() {
+                if (idx < snippet.length) {
+                    let text = snippet.substring(0, idx + 1);
+                    let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+                    let formatted = safeText
+                        .replace(/(async|function|import|from|const|await|def|return|int|main)/g, '<span class="code-keyword">$1</span>')
+                        .replace(/(runScan|inject|check|print|cout)/g, '<span class="code-func">$1</span>')
+                        .replace(/('[^']*')/g, '<span class="code-string">$1</span>')
+                        .replace(/(\/\/[^\n]*|#[^\n]*)/g, '<span class="code-comment">$1</span>');
+
+                    el.innerHTML = formatted + '<span class="cursor"></span>';
+                    el.scrollTop = el.scrollHeight;
+                    idx++;
+                    setTimeout(run, 25);
+                }
+            }
+            run();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initMatrixEffect();
+        });
+    </script>
+</body>
+</html>
